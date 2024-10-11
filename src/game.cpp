@@ -1,5 +1,6 @@
-#include "game.h"
 #include <random>
+
+#include "include/game.h"
 
 Game::Game()
 {
@@ -9,11 +10,12 @@ Game::Game()
     nextBlock = GetRandomBlock();
     gameOver = false;
     score = 0;
+    timer = 0.0f;
+    muted = false;
     InitAudioDevice();
-    music = LoadMusicStream("Sounds/music.mp3");
-    PlayMusicStream(music);
-    rotateSound = LoadSound("Sounds/rotate.mp3");
-    clearSound = LoadSound("Sounds/clear.mp3");
+    music = LoadMusicStream("assets/sounds/music.mp3");
+    rotateSound = LoadSound("assets/sounds/rotate.mp3");
+    clearSound = LoadSound("assets/sounds/clear.mp3");
 }
 
 Game::~Game()
@@ -61,28 +63,47 @@ void Game::Draw()
 
 void Game::HandleInput()
 {
-    int keyPressed = GetKeyPressed();
-    if (gameOver && keyPressed != 0)
+    constexpr float interval = 0.1f;
+    if (gameOver && GetKeyPressed() != 0)
     {
         gameOver = false;
         Reset();
     }
-    switch (keyPressed)
+
+    if (IsKeyDown(KEY_LEFT))
     {
-    case KEY_LEFT:
-        MoveBlockLeft();
-        break;
-    case KEY_RIGHT:
-        MoveBlockRight();
-        break;
-    case KEY_DOWN:
+        timer += GetFrameTime();
+        if (timer >= interval)
+        {
+            MoveBlockLeft();
+            timer = 0.0f;
+        }
+    }
+    else if (IsKeyDown(KEY_RIGHT))
+    {
+        timer += GetFrameTime();
+        if (timer >= interval)
+        {
+            MoveBlockRight();
+            timer = 0.0f;
+        }
+    }
+    else if (IsKeyDown(KEY_DOWN))
+    {
         MoveBlockDown();
         UpdateScore(0, 1);
-        break;
-    case KEY_UP:
-        RotateBlock();
-        break;
     }
+    else if (IsKeyPressed(KEY_UP))
+    {
+        RotateBlock();
+    }
+    else if (IsKeyPressed(KEY_SEMICOLON)) // m on azerty keyboard
+    {
+        muted = !muted;
+    }
+
+    if (!muted) ResumeMusicStream(music);
+    else PauseMusicStream(music);
 }
 
 void Game::MoveBlockLeft()
@@ -144,7 +165,7 @@ void Game::RotateBlock()
         {
             currentBlock.UndoRotation();
         }
-        else
+        else if (!muted)
         {
             PlaySound(rotateSound);
         }
@@ -167,7 +188,7 @@ void Game::LockBlock()
     int rowsCleared = grid.ClearFullRows();
     if (rowsCleared > 0)
     {
-        PlaySound(clearSound);
+        if (!muted) PlaySound(clearSound);
         UpdateScore(rowsCleared, 0);
     }
 }

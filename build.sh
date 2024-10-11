@@ -1,0 +1,1 @@
+g++ src/*.cpp -o bin/tetris -I./src/include -L./lib -lraylib -lopengl32 -lwinmm -lgdi32
