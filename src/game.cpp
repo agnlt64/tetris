@@ -14,14 +14,11 @@ Game::Game()
     muted = false;
     InitAudioDevice();
     music = LoadMusicStream("assets/sounds/music.mp3");
-    rotateSound = LoadSound("assets/sounds/rotate.mp3");
-    clearSound = LoadSound("assets/sounds/clear.mp3");
+    PlayMusicStream(music);
 }
 
 Game::~Game()
 {
-    UnloadSound(rotateSound);
-    UnloadSound(clearSound);
     UnloadMusicStream(music);
     CloseAudioDevice();
 }
@@ -32,7 +29,11 @@ Block Game::GetRandomBlock()
     {
         blocks = GetAllBlocks();
     }
-    int randomIndex = rand() % blocks.size();
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0, blocks.size() - 1);
+
+    int randomIndex = dist(rng);
     Block block = blocks[randomIndex];
     blocks.erase(blocks.begin() + randomIndex);
     return block;
@@ -90,14 +91,19 @@ void Game::HandleInput()
     }
     else if (IsKeyDown(KEY_DOWN))
     {
-        MoveBlockDown();
+        timer += GetFrameTime();
+        if (timer >= interval * 0.5)
+        {
+            MoveBlockDown();
+            timer = 0.0f;
+        }
         UpdateScore(0, 1);
     }
     else if (IsKeyPressed(KEY_UP))
     {
         RotateBlock();
     }
-    else if (IsKeyPressed(KEY_SEMICOLON)) // m on azerty keyboard
+    else if (IsKeyPressed(KEY_SEMICOLON) || IsKeyPressed(KEY_M)) // ; on qwerty is m on azerty
     {
         muted = !muted;
     }
@@ -165,10 +171,6 @@ void Game::RotateBlock()
         {
             currentBlock.UndoRotation();
         }
-        else if (!muted)
-        {
-            PlaySound(rotateSound);
-        }
     }
 }
 
@@ -188,7 +190,6 @@ void Game::LockBlock()
     int rowsCleared = grid.ClearFullRows();
     if (rowsCleared > 0)
     {
-        if (!muted) PlaySound(clearSound);
         UpdateScore(rowsCleared, 0);
     }
 }

@@ -30,8 +30,6 @@ private:
     std::vector<Block> blocks;
     Block currentBlock;
     Block nextBlock;
-    Sound rotateSound;
-    Sound clearSound;
 
     float timer;
     bool muted;

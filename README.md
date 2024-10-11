@@ -16,7 +16,7 @@ g++ src/*.cpp -o bin/tetris -I./src/include -L/path/to/raylib -lraylib
 On Linux, if you have Raylib installed globally, you may not have to use `-L/path/to/raylib`.
 
 # Controls
-Move blocks `left` and `right` with the arrow keys. Hold to move faster. Use `up` to rotate the current block. Use `down` to make the current block go down by one row. Hold to go down faster.
+Move blocks `left` and `right` with the arrow keys. Hold to move faster. Use `up` to rotate the current block. Use `down` to make the current block go down by one row. Hold to go down faster. Press `M` to pause the music. 
 
 # Credits
 Original repo [here](https://github.com/educ8s/Cpp-Tetris-Game-with-raylib).

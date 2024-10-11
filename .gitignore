@@ -1,4 +1,4 @@
 bin/*
 lib/*
-*.zip
+release/*
 .vscode

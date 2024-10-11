@@ -27,11 +27,22 @@ int main()
 
     Game game = Game();
 
+    double timeStarted = 1.0f;
+    float interval = 0.5f;
+
     while (WindowShouldClose() == false)
     {
+        timeStarted += GetFrameTime();
+
+        if ((int)timeStarted % 90 == 0)
+        {
+            interval = std::max(0.15f, interval - 0.05f);
+            timeStarted = 1.0f;
+        }
+
         UpdateMusicStream(game.music);
         game.HandleInput();
-        if (EventTriggered(0.5))
+        if (EventTriggered(interval))
         {
             game.MoveBlockDown();
         }
@@ -43,6 +54,8 @@ int main()
         if (game.gameOver)
         {
             DrawTextEx(font, "GAME OVER", {320, 450}, 38, 2, WHITE);
+            timeStarted = 1.0f;
+            interval = 0.5f;
         }
         DrawRectangleRounded({320, 55, 170, 60}, 0.3, 6, lightBlue);
 
