@@ -5,6 +5,14 @@
 #include "game.h"
 #include "colors.h"
 
+#ifdef _WIN32
+#   define TITLE "Tetris - Windows"
+#elif __linux__
+#   define TITLE "Tetris - Linux"
+#elif __APPLE__
+#   define TITLE "Tetris - MacOS"
+#endif
+
 double lastUpdateTime = 0;
 
 bool EventTriggered(double interval)
@@ -20,7 +28,7 @@ bool EventTriggered(double interval)
 
 int main()
 {
-    InitWindow(500, 620, "raylib Tetris");
+    InitWindow(500, 620, TITLE);
     SetTargetFPS(60);
 
     Font font = LoadFontEx("assets/fonts/monogram.ttf", 64, 0, 0);
