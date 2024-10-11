@@ -103,6 +103,10 @@ void Game::HandleInput()
     {
         RotateBlock();
     }
+    else if (IsKeyPressed(KEY_SPACE))
+    {
+        DockBlock();
+    }
     else if (IsKeyPressed(KEY_SEMICOLON) || IsKeyPressed(KEY_M)) // ; on qwerty is m on azerty
     {
         muted = !muted;
@@ -147,6 +151,16 @@ void Game::MoveBlockDown()
             LockBlock();
         }
     }
+}
+
+void Game::DockBlock()
+{
+    while (BlockFits())
+    {
+        currentBlock.Move(1, 0);
+    }
+    currentBlock.Move(-1, 0);
+    LockBlock();
 }
 
 bool Game::IsBlockOutside()

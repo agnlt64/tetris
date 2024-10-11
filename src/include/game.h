@@ -18,6 +18,7 @@ public:
 private:
     void MoveBlockLeft();
     void MoveBlockRight();
+    void DockBlock();
     Block GetRandomBlock();
     std::vector<Block> GetAllBlocks();
     bool IsBlockOutside();
