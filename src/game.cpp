@@ -97,7 +97,7 @@ void Game::HandleInput()
             MoveBlockDown();
             timer = 0.0f;
         }
-        UpdateScore(0, 1);
+        // UpdateScore(0, 1);
     }
     else if (IsKeyPressed(KEY_UP))
     {
@@ -204,7 +204,7 @@ void Game::LockBlock()
     int rowsCleared = grid.ClearFullRows();
     if (rowsCleared > 0)
     {
-        UpdateScore(rowsCleared, 0);
+        UpdateScore(rowsCleared);
     }
 }
 
@@ -230,22 +230,24 @@ void Game::Reset()
     score = 0;
 }
 
-void Game::UpdateScore(int linesCleared, int moveDownPoints)
+// https://tetris.wiki/Scoring, Original BPS Scoring System
+void Game::UpdateScore(int linesCleared)
 {
     switch (linesCleared)
     {
     case 1:
-        score += 100;
+        score += 40;
         break;
     case 2:
-        score += 300;
+        score += 100;
         break;
     case 3:
-        score += 500;
+        score += 300;
+        break;
+    case 4:
+        score += 1200;
         break;
     default:
         break;
     }
-
-    score += moveDownPoints;
 }

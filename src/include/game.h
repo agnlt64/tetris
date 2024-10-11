@@ -26,7 +26,7 @@ private:
     void LockBlock();
     bool BlockFits();
     void Reset();
-    void UpdateScore(int linesCleared, int moveDownPoints);
+    void UpdateScore(int linesCleared);
     Grid grid;
     std::vector<Block> blocks;
     Block currentBlock;
